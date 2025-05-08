@@ -1,0 +1,29 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-22.04
+
+    steps:
+        - uses: actions/checkout@v4
+    
+        - name: Build and start containers
+          run: |
+            docker compose -f docker-compose.yml up -d
+            # Wait for services to be ready
+            sleep 18
+        
+        - name: Check running containers
+          run: docker ps
+        
+        - name: Stop containers
+          if: always()
+          run: docker compose down

@@ -1,0 +1,52 @@
+extends: default
+yaml-files:
+  - '*.yaml'
+  - '*.yml'
+
+strict: true
+
+rules:
+  anchors:
+    level: error
+  braces:
+    level: error
+  brackets:
+    level: error
+  colons:
+    level: error
+  commas:
+    level: error
+  comments:
+    level: error
+  comments-indentation:
+    level: error
+  document-end:
+    level: error
+  document-start:
+    level: error
+  empty-lines:
+    level: error
+  empty-values:
+    level: error
+  float-values:
+    level: error
+  hyphens:
+    level: error
+  indentation:
+    level: error
+  key-duplicates:
+    level: error
+  line-length:
+    level: error
+  new-line-at-end-of-file:
+    level: error
+  new-lines:
+    level: error
+  octal-values:
+    level: error
+  quoted-strings:
+    level: error
+  trailing-spaces:
+    level: error
+  truthy:
+    level: error

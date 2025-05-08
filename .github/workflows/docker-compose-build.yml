@@ -27,4 +27,8 @@ jobs:
         
         - name: Stop containers
           if: always()
-          run: docker compose down
+          run: |
+            for file in $(find . -name "docker-compose.yml"); do
+              echo "Stopping containers from: $file"
+              docker compose -f $file down
+            done

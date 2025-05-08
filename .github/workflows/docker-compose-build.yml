@@ -46,8 +46,7 @@ jobs:
         run: |
            yamllint -f colored --strict -c .yamllint ./compose-files || {
             echo "❌ YAML linting failed with warnings/errors"
-            exit 1
-          }
+            exit 1}
 
       - name: Docker Compose Lint
         run: |

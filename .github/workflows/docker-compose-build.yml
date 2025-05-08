@@ -17,9 +17,10 @@ jobs:
     
         - name: Build and start containers
           run: |
-            docker compose -f docker-compose.yml up -d
-            # Wait for services to be ready
-            sleep 18
+            for file in $(find . -name "docker-compose.yml"); do
+                echo "Starting compose file: $file"
+                docker compose -f $file up -d
+            done
         
         - name: Check running containers
           run: docker ps

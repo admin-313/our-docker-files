@@ -45,7 +45,6 @@ jobs:
       - name: YAML Lint
         run: |
           yamllint -c .yamllint compose*.yml
-        continue-on-error: true
 
       - name: Docker Compose Lint
         run: |

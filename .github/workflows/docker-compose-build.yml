@@ -44,7 +44,7 @@ jobs:
 
       - name: YAML Lint
         run: |
-          find ./compose-files -type f \( -name "*.yml" -o -name "*.yaml" \) -exec yamllint -c .yamllint {} \;
+          find ./compose-files -type f \( -name "*.yml" -o -name "*.yaml" \) -exec yamllint --strict -c .yamllint {} \;
 
 
       - name: Docker Compose Lint

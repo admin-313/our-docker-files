@@ -36,8 +36,6 @@ rules:
     level: error
   key-duplicates:
     level: error
-  key-ordering:
-    level: warning
   line-length:
     level: error
   new-line-at-end-of-file:

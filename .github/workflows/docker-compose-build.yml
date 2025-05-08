@@ -5,13 +5,12 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  schedule: 
+    - cron: "0 0 * * 0"
 
 jobs:
-
   build:
-
     runs-on: ubuntu-22.04
-
     steps:
         - uses: actions/checkout@v4
     
@@ -32,3 +31,25 @@ jobs:
               echo "Stopping containers from: $file"
               docker compose -f $file down
             done
+  ymllinter:
+    name: yamllint
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install yamllint
+        run: |
+          pip install yamllint
+
+      - name: YAML Lint
+        run: |
+          yamllint -c .yamllint compose*.yml
+        continue-on-error: true
+
+      - name: Docker Compose Lint
+        run: |
+          for file in $(find . -name "compose*.yml"); do
+            echo "Linting $file..."
+            docker compose -f $file config
+          done

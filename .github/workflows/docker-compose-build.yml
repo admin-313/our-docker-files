@@ -44,8 +44,13 @@ jobs:
 
       - name: YAML Lint
         run: |
-                    find ./compose-files -type f \( -name "*.yml" -o -name "*.yaml" \) -exec yamllint -c .yamllint {} \;          
-
+          VIOLATIONS=$(mktemp)
+          find ./compose-files -type f \( -name "*.yml" -o -name "*.yaml" \) -exec yamllint --format parsable --strict -c .yamllint {} \; | tee "${VIOLATIONS}"
+          if [[ -s "${VIOLATIONS}" ]]; then
+            echo "❌ YAML linting found issues"
+            exit 1
+          fi
+          
       - name: Docker Compose Lint
         run: |
           for file in $(find . -name "compose*.yml"); do

@@ -19,6 +19,7 @@ jobs:
             for file in $(find . -name "docker-compose.yml"); do
                 echo "Starting compose file: $file"
                 docker compose -f $file up -d
+                docker compose -f $file down
             done
         
         - name: Check running containers

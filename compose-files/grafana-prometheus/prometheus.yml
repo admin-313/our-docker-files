@@ -7,7 +7,7 @@ scrape_configs:
     scrape_interval: "5s"
     static_configs:
       - targets:
-          - "172.88.91.254:9100"
+          - "172.90.91.254:9100"
 
 relabel_configs:
   - source_labels: ["__address__"]

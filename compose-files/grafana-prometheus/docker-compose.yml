@@ -1,9 +1,9 @@
 ---
 services:
   grafana:
-    image: grafana/grafana-enterprise:main-ubuntu
-    container_name: grafana
-    restart: unless-stopped
+    image: "grafana/grafana-enterprise:main-ubuntu"
+    container_name: "grafana"
+    restart: "unless-stopped"
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     ports:
       - '41488:3000'
@@ -13,42 +13,42 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
     secrets:
-      - grafana_secrets
+      - "grafana_secrets"
     networks:
       grafana-main:
         ipv4_address: "172.88.1.254"
 
   blackbox:
-    image: prom/blackbox-exporter:latest
+    image: "prom/blackbox-exporter:latest"
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     command:
-      - --config.file=/etc/blackbox/blackbox.yml
+      - "--config.file=/etc/blackbox/blackbox.yml"
     volumes:
-      - ./blackbox.yml:/etc/blackbox/blackbox.yml
+      - "./blackbox.yml:/etc/blackbox/blackbox.yml"
     networks:
       nginx_pingers:
-        ipv4_address: 172.89.1.252
+        ipv4_address: "172.89.1.252"
 
   prometheus:
-    image: prom/prometheus:latest
+    image: "prom/prometheus:latest"
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
 
     expose:
       - "9090"
     command:
-      - --config.file=/etc/prometheus/prometheus.yml
-      - '--web.enable-lifecycle'
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-lifecycle"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
     depends_on:
-      - blackbox
+      - "blackbox"
     networks:
       nginx_pingers:
-        ipv4_address: 172.89.1.253
+        ipv4_address: "172.89.1.253"
       grafana-main:
-        ipv4_address: 172.88.1.253
+        ipv4_address: "172.88.1.253"
       node-exporter-network:
-        ipv4_address: 172.88.91.253
+        ipv4_address: "172.88.91.253"
 
   watchtower-main:
     image: "containrrr/watchtower:latest"
@@ -89,18 +89,18 @@ volumes:
 
 secrets:
   grafana_secrets:
-    file: grafana.ini
+    file: "grafana.ini"
 
 networks:
   grafana-main:
-    name: grafana-main
+    name: "grafana-main"
     ipam:
       config:
         - subnet: "172.88.1.0/24"
 
   nginx_pingers:
-    driver: bridge
-    name: blackbox-prometheus-nginx
+    driver: "bridge"
+    name: "blackbox-prometheus-nginx"
     ipam:
       config:
         - subnet: "172.89.1.0/24"

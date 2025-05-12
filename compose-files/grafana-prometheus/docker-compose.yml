@@ -20,6 +20,7 @@ services:
 
   blackbox:
     image: "prom/blackbox-exporter:latest"
+    container_name: "blackbox"
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     command:
       - "--config.file=/etc/blackbox/blackbox.yml"
@@ -32,7 +33,7 @@ services:
   prometheus:
     image: "prom/prometheus:latest"
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
-
+    container_name: "prometheus"
     expose:
       - "9090"
     command:

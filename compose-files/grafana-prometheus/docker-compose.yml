@@ -1,0 +1,116 @@
+---
+services:
+  grafana:
+    image: "grafana/grafana-enterprise:main-ubuntu"
+    container_name: "grafana"
+    restart: "unless-stopped"
+    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
+    ports:
+      - '41488:3000'
+    volumes:
+      - "grafana-storage:/var/lib/grafana"
+      - "./grafana.ini:/etc/grafana/grafana.ini"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    secrets:
+      - "grafana_secrets"
+    networks:
+      grafana-main:
+        ipv4_address: "172.88.1.254"
+
+  blackbox:
+    image: "prom/blackbox-exporter:latest"
+    container_name: "blackbox"
+    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
+    command:
+      - "--config.file=/etc/blackbox/blackbox.yml"
+    volumes:
+      - "./blackbox.yml:/etc/blackbox/blackbox.yml"
+    networks:
+      nginx_pingers:
+        ipv4_address: "172.89.1.252"
+
+  prometheus:
+    image: "prom/prometheus:latest"
+    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
+    container_name: "prometheus"
+    expose:
+      - "9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-lifecycle"
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+    depends_on:
+      - "blackbox"
+    networks:
+      nginx_pingers:
+        ipv4_address: "172.89.1.253"
+      grafana-main:
+        ipv4_address: "172.88.1.253"
+      node-exporter-network:
+        ipv4_address: "172.90.91.253"
+
+  watchtower-main:
+    image: "containrrr/watchtower:latest"
+    container_name: "watchtower-main"
+    restart: "unless-stopped"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    command: "--scope mainwatchtower"
+    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
+    environment:
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_POLL_INTERVAL: "86400"
+
+  node-exporter:
+    image: "prom/node-exporter:master"
+    container_name: "node-exporter"
+    hostname: "Grafana"
+    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
+    restart: "unless-stopped"
+    volumes:
+      - "/proc:/host/proc:ro"
+      - "/sys:/host/sys:ro"
+      - "/:/rootfs:ro"
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.rootfs=/rootfs"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+      - "--collector.netclass.ignored-devices=^(veth.*|docker.*|br-.*|vmnet.*|lo)$$"
+    expose:
+      - "9100"
+    networks:
+      node-exporter-network:
+        ipv4_address: "172.90.91.254"
+
+volumes:
+  grafana-storage: {}
+
+secrets:
+  grafana_secrets:
+    file: "grafana.ini"
+
+networks:
+  grafana-main:
+    name: "grafana-main"
+    ipam:
+      config:
+        - subnet: "172.88.1.0/24"
+
+  nginx_pingers:
+    driver: "bridge"
+    name: "blackbox-prometheus-nginx"
+    ipam:
+      config:
+        - subnet: "172.89.1.0/24"
+
+  node-exporter-network:
+    name: "node-exporter-network"
+    driver: "bridge"
+    enable_ipv6: false
+    ipam:
+      config:
+        - subnet: "172.90.91.0/24"
+...

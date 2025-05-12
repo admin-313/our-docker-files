@@ -5,6 +5,7 @@ services:
     container_name: "node-exporter"
     hostname: "CHANGEME"
     restart: "unless-stopped"
+    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     volumes:
       - "/proc:/host/proc:ro"
       - "/sys:/host/sys:ro"
@@ -20,6 +21,19 @@ services:
     networks:
       node-exporter-network:
         ipv4_address: "172.88.91.254"
+
+  watchtower-main:
+    image: "containrrr/watchtower:latest"
+    container_name: "watchtower-main"
+    restart: "unless-stopped"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    command: "--scope mainwatchtower"
+    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
+    environment:
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_POLL_INTERVAL: "10"
+
 networks:
   node-exporter-network:
     driver: "bridge"

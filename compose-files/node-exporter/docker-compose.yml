@@ -5,7 +5,7 @@ services:
     container_name: "node-exporter"
     hostname: "CHANGEME"
     restart: "unless-stopped"
-    labels: [ "com.centurylinklabs.watchtower.scope=mainwatchtower" ]
+    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     volumes:
       - "/proc:/host/proc:ro"
       - "/sys:/host/sys:ro"
@@ -29,7 +29,7 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     command: "--scope mainwatchtower"
-    labels: [ "com.centurylinklabs.watchtower.scope=mainwatchtower" ]
+    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     environment:
       WATCHTOWER_CLEANUP: "true"
       WATCHTOWER_POLL_INTERVAL: "10"

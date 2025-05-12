@@ -50,6 +50,18 @@ services:
       node-exporter-network:
         ipv4_address: 172.88.91.253
 
+  watchtower-main:
+    image: "containrrr/watchtower:latest"
+    container_name: "watchtower-main"
+    restart: "unless-stopped"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    command: "--scope mainwatchtower"
+    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
+    environment:
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_POLL_INTERVAL: "86400"
+
   node-exporter:
     image: "prom/node-exporter:master"
     container_name: "node-exporter"

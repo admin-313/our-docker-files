@@ -1,7 +1,7 @@
 ---
 services:
   grafana:
-    image: grafana/grafana-enterprise
+    image: grafana/grafana-enterprise:main-ubuntu
     container_name: grafana
     restart: unless-stopped
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]

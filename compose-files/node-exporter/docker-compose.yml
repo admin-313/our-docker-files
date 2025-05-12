@@ -32,7 +32,7 @@ services:
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     environment:
       WATCHTOWER_CLEANUP: "true"
-      WATCHTOWER_POLL_INTERVAL: "10"
+      WATCHTOWER_POLL_INTERVAL: "86400"
 
 networks:
   node-exporter-network:

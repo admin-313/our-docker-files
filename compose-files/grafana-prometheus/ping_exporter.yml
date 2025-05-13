@@ -1,0 +1,5 @@
+ping:
+  interval: 5s
+  timeout: 3s
+  history-size: 42
+  payload-size: 120

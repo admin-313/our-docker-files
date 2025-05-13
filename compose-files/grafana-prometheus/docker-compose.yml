@@ -23,7 +23,8 @@ services:
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     container_name: "ping_exporter"
     command:
-      - "--config.path /etc/ping_exporter/ping_exporter.yml"    
+      - "--config.path /etc/ping_exporter/ping_exporter.yml"
+      - "--metrics.deprecated=disable"
     volumes:
     - "./ping_exporter.yml:/etc/ping_exporter/ping_exporter.yml"
     networks:

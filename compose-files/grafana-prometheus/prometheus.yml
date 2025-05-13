@@ -9,11 +9,11 @@ scrape_configs:
       - targets:
           - "172.90.91.254:9100"
 
-relabel_configs:
-  - source_labels: ["__address__"]
-    target_label: "__param_target"
-  - source_labels: ["__param_target"]
-    target_label: "instance"
-  - target_label: "__address__"
-    replacement: "172.89.1.252:9115"  # Address of the Blackbox Exporter.
+    relabel_configs:
+      - source_labels: ["__address__"]
+        target_label: "__param_target"
+      - source_labels: ["__param_target"]
+        target_label: "instance"
+      - target_label: "__address__"
+        replacement: "172.89.1.252:9115"  # Address of the Blackbox Exporter.
 ...

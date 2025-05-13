@@ -18,14 +18,25 @@ services:
       grafana-main:
         ipv4_address: "172.88.1.254"
 
-  blackbox:
-    image: "prom/blackbox-exporter:latest"
-    container_name: "blackbox"
+  # blackbox:
+  #   image: "prom/blackbox-exporter:latest"
+  #   container_name: "blackbox"
+  #   labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
+  #   command:
+  #     - "--config.file=/etc/blackbox/blackbox.yml"
+  #   volumes:
+  #     - "./blackbox.yml:/etc/blackbox/blackbox.yml"
+  #   networks:
+  #     nginx_pingers:
+  #       ipv4_address: "172.89.1.252"
+  ping_exporter:
+    image: "czerwonk/ping_exporter:latest"
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
+    container_name: "ping_exporter"
     command:
-      - "--config.file=/etc/blackbox/blackbox.yml"
+      - "--config.path /etc/ping_exporter/ping_exporter.yml"    
     volumes:
-      - "./blackbox.yml:/etc/blackbox/blackbox.yml"
+    - "./ping_exporter.yml:/etc/ping_exporter/ping_exporter.yml"
     networks:
       nginx_pingers:
         ipv4_address: "172.89.1.252"

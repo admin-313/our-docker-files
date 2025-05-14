@@ -22,24 +22,24 @@ route:
 receivers:
 - name: 'telegram-warning'
   telegram_configs:
-  - api_url: "https://api.telegram.org/bot{{ env 'TELEGRAM_BOT_TOKEN'}}/sendMessage"
-    chat_id: "{{ env 'TELEGRAM_CHAT_ID'}}"
+  - api_url: "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
+    chat_id: ${TELEGRAM_CHAT_ID}
     message: '⚠️ Warning: High ICMP Loss Detected\n{{ range .Alerts }}\n{{ .Annotations.summary }}\n{{ .Annotations.description }}\n{{ end }}'
     parse_mode: 'HTML'
     send_resolved: true
 
 - name: 'telegram-error'
   telegram_configs:
-  - api_url: "https://api.telegram.org/bot{{ env 'TELEGRAM_BOT_TOKEN'}}/sendMessage"
-    chat_id: "{{ env 'TELEGRAM_CHAT_ID'}}"
+  - api_url: "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
+    chat_id: ${TELEGRAM_CHAT_ID}
     message: '🛑 Error: Very High ICMP Loss Detected\n{{ range .Alerts }}\n{{ .Annotations.summary }}\n{{ .Annotations.description }}\n{{ end }}'
     parse_mode: 'HTML'
     send_resolved: true
 
 - name: 'telegram-critical'
   telegram_configs:
-  - api_url: "https://api.telegram.org/bot{{ env 'TELEGRAM_BOT_TOKEN'}}/sendMessage"
-    chat_id: "{{ env 'TELEGRAM_CHAT_ID'}}"
+  - api_url: "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
+    chat_id: ${TELEGRAM_CHAT_ID}
     message: '🚨 Critical: Complete ICMP Loss Detected\n{{ range .Alerts }}\n{{ .Annotations.summary }}\n{{ .Annotations.description }}\n{{ end }}'
     parse_mode: 'HTML'
     send_resolved: true

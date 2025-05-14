@@ -3,11 +3,13 @@ global:
   scrape_interval: "20s"
 
 scrape_configs:
-  - job_name: "node-exporter"
+  - job_name: "ping_exporter"
     scrape_interval: "5s"
+    honor_lables: true
+    scheme: "http"
     static_configs:
       - targets:
-          - "172.90.91.254:9100"
+        - "ping_exporter:9427"
 
     relabel_configs:
       - source_labels: ["__address__"]
@@ -15,5 +17,5 @@ scrape_configs:
       - source_labels: ["__param_target"]
         target_label: "instance"
       - target_label: "__address__"
-        replacement: "172.89.1.252:9115"  # Address of the Blackbox Exporter.
+        replacement: "ping_exporter:9427"  # Address of the Ping Exporter
 ...

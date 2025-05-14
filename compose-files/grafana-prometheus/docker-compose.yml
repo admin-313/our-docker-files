@@ -60,7 +60,8 @@ services:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--web.enable-lifecycle"
     volumes:
-      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml:ro"
+      - "./alert_rules.yml:/etc/prometheus/alert_rules.yml:ro"
     networks:
       nginx_pingers:
         ipv4_address: "172.89.1.253"

@@ -1,3 +1,4 @@
+---
 targets:
   - "172.89.1.253"
 
@@ -6,3 +7,4 @@ ping:
   timeout: "3s"
   history-size: 42
   payload-size: 120
+...

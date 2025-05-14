@@ -39,7 +39,8 @@ services:
     expose:
       - "9093"
     volumes:
-      - "./alertmanager.yml:/etc/alertmanager/alertmanager.yml"
+      - "./alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro"
+      - "./tgtoken:/etc/alertmanager/tgtoken:ro"
     depends_on:
       - "prometheus"
     command:

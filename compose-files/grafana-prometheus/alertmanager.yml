@@ -8,29 +8,50 @@ route:
   repeat_interval: 4h
   receiver: 'telegram-notifications'
   routes:
-    - match:
-        severity: critical
-      receiver: 'telegram-notifications'
-      repeat_interval: 1h
-    - match:
-        severity: error
-      receiver: 'telegram-notifications'
-      repeat_interval: 2h
-    - match:
-        severity: warning
-      receiver: 'telegram-notifications'
-      repeat_interval: 4h
+  - match:
+      severity: warning
+    receiver: 'telegram-warning'
+  - match:
+      severity: error
+    receiver: 'telegram-error'
+  - match:
+      severity: critical
+    receiver: 'telegram-critical'
+
 
 receivers:
-  - name: 'telegram-notifications'
-    telegram_configs:
-    - bot_token_file: '/etc/alertmanager/tgtoken'
-      chat_id: <YOUR_CHAT_ID>
-      parse_mode: 'HTML'
-      message: |
-        🚨 <b>{{ .Status | toUpper }}</b>
-        <b>Alert:</b> {{ .CommonAnnotations.summary }}
-        <b>Severity:</b> {{ .CommonLabels.severity }}
-        <b>Instance:</b> {{ .CommonLabels.instance }}
-        <b>Details:</b> {{ .CommonAnnotations.description }}
-        <b>Value:</b> {{ .CommonAnnotations.value }}
+- name: 'telegram-warning'
+  telegram_configs:
+  - api_url: "https://api.telegram.org/bot{{ env 'TELEGRAM_BOT_TOKEN'}}/sendMessage"
+    chat_id: "{{ env 'TELEGRAM_CHAT_ID'}}"
+    message: '⚠️ Warning: High ICMP Loss Detected\n{{ range .Alerts }}\n{{ .Annotations.summary }}\n{{ .Annotations.description }}\n{{ end }}'
+    parse_mode: 'HTML'
+    send_resolved: true
+
+- name: 'telegram-error'
+  telegram_configs:
+  - api_url: "https://api.telegram.org/bot{{ env 'TELEGRAM_BOT_TOKEN'}}/sendMessage"
+    chat_id: "{{ env 'TELEGRAM_CHAT_ID'}}"
+    message: '🛑 Error: Very High ICMP Loss Detected\n{{ range .Alerts }}\n{{ .Annotations.summary }}\n{{ .Annotations.description }}\n{{ end }}'
+    parse_mode: 'HTML'
+    send_resolved: true
+
+- name: 'telegram-critical'
+  telegram_configs:
+  - api_url: "https://api.telegram.org/bot{{ env 'TELEGRAM_BOT_TOKEN'}}/sendMessage"
+    chat_id: "{{ env 'TELEGRAM_CHAT_ID'}}"
+    message: '🚨 Critical: Complete ICMP Loss Detected\n{{ range .Alerts }}\n{{ .Annotations.summary }}\n{{ .Annotations.description }}\n{{ end }}'
+    parse_mode: 'HTML'
+    send_resolved: true
+
+inhibit_rules:
+- source_match:
+    severity: 'critical'
+  target_match:
+    severity: 'error'
+  equal: ['alertname']
+- source_match:
+    severity: 'error'
+  target_match:
+    severity: 'warning'
+  equal: ['alertname']

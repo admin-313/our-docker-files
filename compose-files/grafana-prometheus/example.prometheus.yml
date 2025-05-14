@@ -11,4 +11,13 @@ scrape_configs:
       - targets:
         - "ping_exporter:9427"
 
+    metric_relabel_configs:
+        - source_labels: [target]
+          regex: "172.89.1.253"
+          target_label: "name"
+          replacement: "prometheus"
+        - source_labels: [target]
+          regex: "172.89.1.253"
+          target_label: "group"
+          replacement: "internal"
 ...

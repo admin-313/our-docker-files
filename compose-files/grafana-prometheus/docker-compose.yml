@@ -46,6 +46,8 @@ services:
       - "prometheus"
     command:
       - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--cluster.listen-address=172.89.1.252:9094"
+      - "--cluster.advertise-address=172.89.1.252:9094"
     networks:
       nginx_pingers:
         ipv4_address: "172.89.1.252"

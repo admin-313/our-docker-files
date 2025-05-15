@@ -1,5 +1,7 @@
 global:
   resolve_timeout: 5m
+  api_url: "https://api.telegram.org"
+  bot_token_file: "/etc/alertmanager/.botapitoken"
 
 route:
   group_by: ['alertname', 'instance']
@@ -23,7 +25,7 @@ receivers:
 - name: 'telegram-warning'
   telegram_configs:
   - api_url: "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
-    chat_id: ${TELEGRAM_CHAT_ID}
+    chat_id: !!int64 ${TELEGRAM_CHAT_ID}
     message: '⚠️ Warning: High ICMP Loss Detected\n{{ range .Alerts }}\n{{ .Annotations.summary }}\n{{ .Annotations.description }}\n{{ end }}'
     parse_mode: 'HTML'
     send_resolved: true
@@ -31,7 +33,7 @@ receivers:
 - name: 'telegram-error'
   telegram_configs:
   - api_url: "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
-    chat_id: ${TELEGRAM_CHAT_ID}
+    chat_id: !!int64 ${TELEGRAM_CHAT_ID}
     message: '🛑 Error: Very High ICMP Loss Detected\n{{ range .Alerts }}\n{{ .Annotations.summary }}\n{{ .Annotations.description }}\n{{ end }}'
     parse_mode: 'HTML'
     send_resolved: true
@@ -39,7 +41,7 @@ receivers:
 - name: 'telegram-critical'
   telegram_configs:
   - api_url: "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
-    chat_id: ${TELEGRAM_CHAT_ID}
+    chat_id: !!int64 ${TELEGRAM_CHAT_ID}
     message: '🚨 Critical: Complete ICMP Loss Detected\n{{ range .Alerts }}\n{{ .Annotations.summary }}\n{{ .Annotations.description }}\n{{ end }}'
     parse_mode: 'HTML'
     send_resolved: true

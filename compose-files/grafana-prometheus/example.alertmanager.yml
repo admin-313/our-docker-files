@@ -1,0 +1,81 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: ['alertname', 'instance']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  receiver: 'telegram-notifications'
+  routes:
+  - match:
+      severity: warning
+    receiver: 'telegram-warning'
+  - match:
+      severity: error
+    receiver: 'telegram-error'
+  - match:
+      severity: critical
+    receiver: 'telegram-critical'
+
+
+receivers:
+- name: 'telegram-warning'
+  telegram_configs:
+    - message:  |
+        ------------------
+        ⚠️ Warning: High ICMP Loss Detected
+        {{- range .Alerts }}
+        Summary: {{ .Annotations.summary }}
+        Description: {{ .Annotations.description }}
+        ------------------
+        {{- end }}
+      bot_token_file: "/etc/alertmanager/.botapitoken"
+      chat_id: <your chat_id in integer format>
+      api_url: "https://api.telegram.org"
+      send_resolved: true
+
+
+- name: 'telegram-error'
+  telegram_configs:
+    - message: |
+        ------------------
+        🛑 Error: Very High ICMP Loss Detected
+        {{- range .Alerts }}
+        Summary: {{ .Annotations.summary }}
+        Description: {{ .Annotations.description }}
+        ------------------
+        {{- end }}
+      bot_token_file: "/etc/alertmanager/.botapitoken"
+      chat_id: <your chat_id in integer format>
+      api_url: "https://api.telegram.org"
+      send_resolved: true
+
+
+- name: 'telegram-critical'
+  telegram_configs:
+    - message: | 
+        ------------------
+        🚨 Critical: Complete ICMP Loss Detected
+        {{- range .Alerts }}
+        Summary: {{ .Annotations.summary }}
+        Description: {{ .Annotations.description }}
+        ------------------
+        {{- end }}
+      bot_token_file: "/etc/alertmanager/.botapitoken"
+      chat_id: <your chat_id in integer format>
+      api_url: "https://api.telegram.org"
+      send_resolved: true
+
+
+inhibit_rules:
+- source_match:
+    severity: 'critical'
+  target_match:
+    severity: 'error'
+  equal: ['alertname']
+- source_match:
+    severity: 'error'
+  target_match:
+    severity: 'warning'
+  equal: ['alertname']

@@ -6,7 +6,7 @@ services:
     restart: "unless-stopped"
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     ports:
-      - '41488:3000'
+      - '0.0.0.0:41488:3000'
     volumes:
       - "grafana-storage:/var/lib/grafana"
       - "./grafana.ini:/etc/grafana/grafana.ini"

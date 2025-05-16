@@ -36,8 +36,9 @@ services:
     image: "prom/alertmanager:latest"
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     container_name: "alertmanager"
+    hostname: "alertmanager"
     expose:
-      - "9093"
+      - "43907"
     volumes:
       - "./alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro"
       - "./.botapitoken:/etc/alertmanager/.botapitoken:ro"
@@ -45,11 +46,11 @@ services:
       - "prometheus"
     command:
       - "--config.file=/etc/alertmanager/alertmanager.yml"
-      - "--cluster.listen-address=172.89.1.252:9093"
-      - "--cluster.advertise-address=172.89.1.252:9093"
+      - "--web.listen-address=172.89.1.126:43907"
+      - "--cluster.advertise-address=172.89.1.126:9095"
     networks:
       nginx_pingers:
-        ipv4_address: "172.89.1.252"
+        ipv4_address: "172.89.1.126"
 
   prometheus:
     image: "prom/prometheus:latest"
@@ -122,6 +123,7 @@ networks:
   nginx_pingers:
     driver: "bridge"
     name: "blackbox-prometheus-nginx"
+    enable_ipv6: false
     ipam:
       config:
         - subnet: "172.89.1.0/24"

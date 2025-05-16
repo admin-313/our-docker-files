@@ -116,6 +116,7 @@ secrets:
 networks:
   grafana-main:
     name: "grafana-main"
+    enable_ipv6: false
     ipam:
       config:
         - subnet: "172.88.1.0/24"

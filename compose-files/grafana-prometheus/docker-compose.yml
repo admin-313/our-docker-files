@@ -115,6 +115,7 @@ secrets:
 
 networks:
   grafana-main:
+    driver: "bridge"
     name: "grafana-main"
     enable_ipv6: false
     ipam:
@@ -130,8 +131,8 @@ networks:
         - subnet: "172.89.1.0/24"
 
   node-exporter-network:
-    name: "node-exporter-network"
     driver: "bridge"
+    name: "node-exporter-network"
     enable_ipv6: false
     ipam:
       config:

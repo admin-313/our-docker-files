@@ -6,7 +6,7 @@ route:
   group_wait: 30s
   group_interval: 5m
   repeat_interval: 4h
-  receiver: 'telegram-notifications'
+  receiver: 'telegram-warning'
   routes:
   - match:
       severity: warning

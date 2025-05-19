@@ -15,7 +15,7 @@ curl -o docker-compose.yml https://raw.githubusercontent.com/admin-313/our-docke
 sudo docker compose up -d
 ```
 
-### Launch Grafana with Prometheus, blackbox and node exporters with docker compose
+### Launch Grafana with Prometheus, ping exporter, node exporter and alertmanager with docker compose
 Don't forget to put config files
 ```
 curl -o docker-compose.yml https://raw.githubusercontent.com/admin-313/our-docker-files/main/compose-files/grafana-prometheus/docker-compose.yml

@@ -37,6 +37,7 @@ services:
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     container_name: "alertmanager"
     hostname: "alertmanager"
+    restart: "unless-stopped"
     expose:
       - "43907"
     volumes:
@@ -56,6 +57,7 @@ services:
     image: "prom/prometheus:latest"
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     container_name: "prometheus"
+    restart: "unless-stopped"
     expose:
       - "9090"
     command:

@@ -7,7 +7,9 @@ groups:
         for: "1m"
         annotations:
           summary: "High packet loss ({{ $value }}%) detected"
-          description: "ICMP packet loss to {{ $labels.target }} has reached {{ $value }}%"
+          description: |
+            ICMP packet loss to {{ $labels.target }} has reached {{ $value }}%
+
         labels:
           severity: "warning"
 
@@ -16,7 +18,8 @@ groups:
         for: "1m"
         annotations:
           summary: "Very high packet loss ({{ $value }}%) detected"
-          description: "ICMP packet loss to {{ $labels.target }} has reached {{ $value }}%"
+          description: |
+            "ICMP packet loss to {{ $labels.target }} has reached {{ $value }}%"
         labels:
           severity: "error"
 

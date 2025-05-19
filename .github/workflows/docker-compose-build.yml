@@ -13,7 +13,19 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
         - uses: actions/checkout@v4
-    
+         
+        - name: Rename example files
+          run: |
+            find . -type f -name 'example.*' -exec sh -c '
+              for file; do
+                newname=$(echo "$file" | sed "s/example\.//")
+                if [ "$file" != "$newname" ]; then
+                  echo "Renaming $file to $newname"
+                  mv "$file" "$newname"
+                fi
+              done
+            ' sh {} +
+
         - name: Build and start containers
           run: |
             for file in $(find . -name "docker-compose.yml"); do

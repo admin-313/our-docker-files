@@ -6,7 +6,7 @@ services:
     restart: "unless-stopped"
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     ports:
-      - '41488:3000'
+      - '0.0.0.0:41488:3000'
     volumes:
       - "grafana-storage:/var/lib/grafana"
       - "./grafana.ini:/etc/grafana/grafana.ini"
@@ -18,31 +18,54 @@ services:
       grafana-main:
         ipv4_address: "172.88.1.254"
 
-  blackbox:
-    image: "prom/blackbox-exporter:latest"
-    container_name: "blackbox"
+  ping_exporter:
+    image: "czerwonk/ping_exporter:latest"
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
-    command:
-      - "--config.file=/etc/blackbox/blackbox.yml"
+    container_name: "ping_exporter"
+    hostname: "ping_exporter"
+    restart: "unless-stopped"
+    expose:
+      - "9427"
     volumes:
-      - "./blackbox.yml:/etc/blackbox/blackbox.yml"
+      - "./ping_exporter.yml:/config/config.yml:ro"
     networks:
       nginx_pingers:
-        ipv4_address: "172.89.1.252"
+        ipv4_address: "172.89.1.251"
+
+  alertmanager:
+    image: "prom/alertmanager:latest"
+    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
+    container_name: "alertmanager"
+    hostname: "alertmanager"
+    restart: "unless-stopped"
+    expose:
+      - "43907"
+    volumes:
+      - "./alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro"
+      - "./.botapitoken:/etc/alertmanager/.botapitoken:ro"
+    depends_on:
+      - "prometheus"
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--web.listen-address=172.89.1.126:43907"
+      - "--cluster.advertise-address=172.89.1.126:9095"
+    networks:
+      nginx_pingers:
+        ipv4_address: "172.89.1.126"
 
   prometheus:
     image: "prom/prometheus:latest"
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     container_name: "prometheus"
+    restart: "unless-stopped"
     expose:
       - "9090"
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--web.enable-lifecycle"
     volumes:
-      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
-    depends_on:
-      - "blackbox"
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml:ro"
+      - "./alert_rules.yml:/etc/prometheus/alert_rules.yml:ro"
     networks:
       nginx_pingers:
         ipv4_address: "172.89.1.253"
@@ -94,7 +117,9 @@ secrets:
 
 networks:
   grafana-main:
+    driver: "bridge"
     name: "grafana-main"
+    enable_ipv6: false
     ipam:
       config:
         - subnet: "172.88.1.0/24"
@@ -102,13 +127,14 @@ networks:
   nginx_pingers:
     driver: "bridge"
     name: "blackbox-prometheus-nginx"
+    enable_ipv6: false
     ipam:
       config:
         - subnet: "172.89.1.0/24"
 
   node-exporter-network:
-    name: "node-exporter-network"
     driver: "bridge"
+    name: "node-exporter-network"
     enable_ipv6: false
     ipam:
       config:

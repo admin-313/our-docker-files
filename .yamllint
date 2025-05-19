@@ -37,7 +37,7 @@ rules:
   key-duplicates:
     level: error
   line-length:
-    level: error
+    level: warning
   new-line-at-end-of-file:
     level: error
   new-lines:

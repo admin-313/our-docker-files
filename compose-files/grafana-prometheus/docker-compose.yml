@@ -38,8 +38,8 @@ services:
     container_name: "alertmanager"
     hostname: "alertmanager"
     restart: "unless-stopped"
-    expose:
-      - "43907"
+    ports:
+      - "0.0.0.0:43907:43907"
     volumes:
       - "./alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro"
       - "./.botapitoken:/etc/alertmanager/.botapitoken:ro"

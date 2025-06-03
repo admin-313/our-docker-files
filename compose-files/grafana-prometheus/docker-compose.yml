@@ -6,7 +6,7 @@ services:
     restart: "unless-stopped"
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     ports:
-      - '0.0.0.0:41488:3000'
+      - "0.0.0.0:41488:3000"
     volumes:
       - "grafana-storage:/var/lib/grafana"
       - "./grafana.ini:/etc/grafana/grafana.ini"
@@ -85,6 +85,14 @@ services:
     environment:
       WATCHTOWER_CLEANUP: "true"
       WATCHTOWER_POLL_INTERVAL: "86400"
+      WATCHTOWER_NOTIFICATIONS_LEVEL: "info"
+      WATCHTOWER_NOTIFICATION_TEMPLATE: >-
+        '{{if .}}{"chat_id": "your_chat_id",
+        "message_thread_id": 13,
+        "parse_mode": "HTML",
+        "text": "{{range .}}{{.Message}}\n{{end}}"}{{end}}'
+      WATCHTOWER_NOTIFICATION_URL: >-
+        "generic://api.telegram.org/bot<your_bot_token>/sendMessage"
 
   node-exporter:
     image: "prom/node-exporter:master"

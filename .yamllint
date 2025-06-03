@@ -1,7 +1,7 @@
 extends: default
 yaml-files:
-  - '*.yaml'
-  - '*.yml'
+  - "*.yaml"
+  - "*.yml"
 
 strict: true
 
@@ -11,7 +11,7 @@ rules:
   braces:
     level: error
   brackets:
-    level: error
+    level: warning
   colons:
     level: error
   commas:

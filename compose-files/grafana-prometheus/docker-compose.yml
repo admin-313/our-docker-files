@@ -38,8 +38,8 @@ services:
     container_name: "alertmanager"
     hostname: "alertmanager"
     restart: "unless-stopped"
-    ports:
-      - "0.0.0.0:43907:43907"
+    expose:
+      - "43907"
     volumes:
       - "./alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro"
       - "./.botapitoken:/etc/alertmanager/.botapitoken:ro"
@@ -58,8 +58,8 @@ services:
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     container_name: "prometheus"
     restart: "unless-stopped"
-    ports:
-      - "0.0.0.0:9090:9090"
+    expose:
+      - "9090"
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--web.enable-lifecycle"

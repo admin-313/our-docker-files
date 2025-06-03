@@ -4,9 +4,9 @@ services:
     image: "grafana/grafana-enterprise:main-ubuntu"
     container_name: "grafana"
     restart: "unless-stopped"
-    labels: [ "com.centurylinklabs.watchtower.scope=mainwatchtower" ]
+    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     ports:
-      - '0.0.0.0:41488:3000'
+      - "0.0.0.0:41488:3000"
     volumes:
       - "grafana-storage:/var/lib/grafana"
       - "./grafana.ini:/etc/grafana/grafana.ini"
@@ -20,7 +20,7 @@ services:
 
   ping_exporter:
     image: "czerwonk/ping_exporter:latest"
-    labels: [ "com.centurylinklabs.watchtower.scope=mainwatchtower" ]
+    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     container_name: "ping_exporter"
     hostname: "ping_exporter"
     restart: "unless-stopped"
@@ -34,7 +34,7 @@ services:
 
   alertmanager:
     image: "prom/alertmanager:latest"
-    labels: [ "com.centurylinklabs.watchtower.scope=mainwatchtower" ]
+    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     container_name: "alertmanager"
     hostname: "alertmanager"
     restart: "unless-stopped"
@@ -55,7 +55,7 @@ services:
 
   prometheus:
     image: "prom/prometheus:latest"
-    labels: [ "com.centurylinklabs.watchtower.scope=mainwatchtower" ]
+    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     container_name: "prometheus"
     restart: "unless-stopped"
     ports:
@@ -81,7 +81,7 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     command: "--scope mainwatchtower"
-    labels: [ "com.centurylinklabs.watchtower.scope=mainwatchtower" ]
+    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     environment:
       WATCHTOWER_CLEANUP: "true"
       WATCHTOWER_POLL_INTERVAL: "86400"
@@ -93,7 +93,7 @@ services:
     image: "prom/node-exporter:master"
     container_name: "node-exporter"
     hostname: "Grafana"
-    labels: [ "com.centurylinklabs.watchtower.scope=mainwatchtower" ]
+    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     restart: "unless-stopped"
     volumes:
       - "/proc:/host/proc:ro"
@@ -142,4 +142,3 @@ networks:
     ipam:
       config:
         - subnet: "172.90.91.0/24"
-...

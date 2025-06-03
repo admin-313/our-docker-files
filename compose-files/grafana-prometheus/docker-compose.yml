@@ -86,8 +86,13 @@ services:
       WATCHTOWER_CLEANUP: "true"
       WATCHTOWER_POLL_INTERVAL: "86400"
       WATCHTOWER_NOTIFICATIONS_LEVEL: "info"
-      WATCHTOWER_NOTIFICATION_TEMPLATE: '{{if .}}{"chat_id": "your_chat_id", "message_thread_id": 13, "parse_mode": "HTML", "text": "{{range .}}{{.Message}}\n{{end}}"}{{end}}'
-      WATCHTOWER_NOTIFICATION_URL: "generic://api.telegram.org/bot<your_bot_token>/sendMessage"
+      WATCHTOWER_NOTIFICATION_TEMPLATE: >-
+        '{{if .}}{"chat_id": "your_chat_id",
+        "message_thread_id": 13,
+        "parse_mode": "HTML",
+        "text": "{{range .}}{{.Message}}\n{{end}}"}{{end}}'
+      WATCHTOWER_NOTIFICATION_URL: >-
+        "generic://api.telegram.org/bot<your_bot_token>/sendMessage"
 
   node-exporter:
     image: "prom/node-exporter:master"

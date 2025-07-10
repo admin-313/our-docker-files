@@ -32,27 +32,6 @@ services:
       nginx_pingers:
         ipv4_address: "172.89.1.251"
 
-  alertmanager:
-    image: "prom/alertmanager:latest"
-    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
-    container_name: "alertmanager"
-    hostname: "alertmanager"
-    restart: "unless-stopped"
-    expose:
-      - "43907"
-    volumes:
-      - "./alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro"
-      - "./.botapitoken:/etc/alertmanager/.botapitoken:ro"
-    depends_on:
-      - "prometheus"
-    command:
-      - "--config.file=/etc/alertmanager/alertmanager.yml"
-      - "--web.listen-address=172.89.1.126:43907"
-      - "--cluster.advertise-address=172.89.1.126:9095"
-    networks:
-      nginx_pingers:
-        ipv4_address: "172.89.1.126"
-
   prometheus:
     image: "prom/prometheus:latest"
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]

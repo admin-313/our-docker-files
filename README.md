@@ -23,3 +23,14 @@ curl -o docker-compose.yml https://raw.githubusercontent.com/admin-313/our-docke
 ```
 sudo docker compose up -d
 ```
+
+### Launch Headless Minio instance
+Run installation script:
+```
+curl https://raw.githubusercontent.com/admin-313/our-docker-files/refs/heads/main/compose-files/minio/install.sh | sh
+```
+Set your creds in the .env file
+```
+sudo docker compose up -d
+```
+Consider working with minio using minio's mc console application

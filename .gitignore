@@ -1,5 +1,6 @@
 venv
 .env
+.github/workflows/secrets.env
 .botapitoken
 compose-files/grafana-prometheus/ping_exporter.yml
 compose-files/grafana-prometheus/prometheus.yml

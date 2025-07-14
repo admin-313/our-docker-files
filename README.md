@@ -33,3 +33,4 @@ Set your creds in the .env file
 ```
 sudo docker compose up -d
 ```
+Consider working with minio using minio's mc console application

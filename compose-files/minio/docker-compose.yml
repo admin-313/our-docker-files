@@ -1,5 +1,28 @@
 ---
 services:
-  minio-main:
-    image: ""
+  minio-backups:
+    image: "minio/minio:RELEASE.2025-06-13T11-33-47Z"
+    container_name: "minio-backups"
+    restart: "unless-stopped"
+    volumes:
+      - "minio-backups-storage:/data"
+    env_file: ".env"
+    ports:
+      - "0.0.0.0:9000:9000"
+    command: "server /data"
+    networks:
+      minio-backups:
+        ipv4_address: "172.88.1.2"
+
+networks:
+  minio-backups:
+    driver: "bridge"
+    name: "minio-backups"
+    enable_ipv6: false
+    ipam:
+      config:
+        - subnet: "172.88.1.0/24"
+
+volumes:
+  minio-backups-storage:
 ...

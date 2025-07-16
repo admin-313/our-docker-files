@@ -1,0 +1,3 @@
+CREATE DATABASE IF NOT EXISTS metrics;
+
+CREATE TABLE IF NOT EXISTS prometheus_metrics ENGINE=TimeSeries;

@@ -25,13 +25,18 @@ services:
       - "0.0.0.0:57308:8443"
       - "0.0.0.0:30721:9000"
     volumes:
-      - "clickhouse-data:/var/lib/clickhouse:rw"
+      - "clickhouse_data:/var/lib/clickhouse:rw"
+      - "clickhouse_logs:/var/log/clickhouse_server:rw"
       - "./clickhouse_config/clickhouse_on_startup.sql:/docker-entrypoint-initdb.d/init_db.sql:ro"
-      - "./clickhouse_config/clickhouse.xml:/etc/clickhouse-server/config.xml:ro"
+      - "./clickhouse_config/config.xml:/etc/clickhouse-server/config.xml:ro"
+      - "./clickhouse_config/config.d/:/etc/clickhouse-server/config.d:rw"
+      
     environment:
       CLICKHOUSE_DB: "${CLICKHOUSE_DB}"
       CLICKHOUSE_USER: "${CLICKHOUSE_USER}"
       CLICKHOUSE_PASSWORD: "${CLICKHOUSE_PASSWORD}"
+      PROMETHEUS_PASSWORD: "${PROMETHEUS_PASSWORD}"
+
     networks:
       grafana-main:
         ipv4_address: "172.88.1.252"
@@ -116,7 +121,8 @@ services:
 
 volumes:
   grafana-storage: {}
-  clickhouse-data: {}
+  clickhouse_data: {}
+  clickhouse_logs: {}
 
 secrets:
   grafana_secrets:

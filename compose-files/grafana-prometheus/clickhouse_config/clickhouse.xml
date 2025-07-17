@@ -1,4 +1,0 @@
-<?xml version="1.0"?>
-<clickhouse>
-    <allow_introspection_functions>1</allow_introspection_functions>
-</clickhouse>

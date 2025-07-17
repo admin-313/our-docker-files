@@ -26,8 +26,8 @@ services:
       - "0.0.0.0:30721:9000"
     volumes:
       - "clickhouse-data:/var/lib/clickhouse:rw"
-      - "./clickhouse_on_startup.sql:/docker-entrypoint-initdb.d/init_db.sql:ro"
-      - "./clickhouse.xml:/etc/clickhouse-server/config.xml:ro"
+      - "./clickhouse_config/clickhouse_on_startup.sql:/docker-entrypoint-initdb.d/init_db.sql:ro"
+      - "./clickhouse_config/clickhouse.xml:/etc/clickhouse-server/config.xml:ro"
     environment:
       CLICKHOUSE_DB: "${CLICKHOUSE_DB}"
       CLICKHOUSE_USER: "${CLICKHOUSE_USER}"

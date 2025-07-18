@@ -32,10 +32,13 @@ services:
       - "./clickhouse_config/config.d/:/etc/clickhouse-server/config.d:rw"
       
     environment:
-      CLICKHOUSE_DB: "${CLICKHOUSE_DB}"
-      CLICKHOUSE_USER: "${CLICKHOUSE_USER}"
-      CLICKHOUSE_PASSWORD: "${CLICKHOUSE_PASSWORD}"
+      # CLICKHOUSE_DB: "${CLICKHOUSE_DB}"
+      # CLICKHOUSE_USER: "${CLICKHOUSE_USER}"
+      # CLICKHOUSE_PASSWORD: "${CLICKHOUSE_PASSWORD}"
+      ADMIN_USER: "${ADMIN_USER}"
+      ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
       PROMETHEUS_PASSWORD: "${PROMETHEUS_PASSWORD}"
+      GRAFANA_PASSWORD: "${GRAFANA_PASSWORD}"
 
     networks:
       grafana-main:

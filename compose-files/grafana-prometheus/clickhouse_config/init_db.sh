@@ -1,10 +1,11 @@
 #!/bin/bash
+set -e
 
 CLICKHOUSE_HOST="localhost"
 CLICKHOUSE_PORT="9000"
 ADMIN_USER="admin"
-ADMIN_PASSWORD_SHA256_HEX="${ADMIN_PASSWORD_SHA256_HEX}"
-echo $ADMIN_PASSWORD_SHA256_HEX
+ADMIN_PASSWORD_SHA256_HEX="password2"
+
 echo "Wait 3 seconds for the db to boot up"
 sleep 3
 echo "Executing the queries....."

@@ -1,55 +1,44 @@
-<clickhouse>
+<?xml version="1.0"?>
+<clickhouse replace="true">
     <profiles>
-        <!-- Default settings -->
         <default>
-            <!-- The maximum number of threads when running a single query. -->
-            <max_threads>8</max_threads>
-            <!-- Be using a new module of native prometheus compability, some parts are still considered 
-            experimental hence we have to switch them on explicitly-->
+            <max_memory_usage>10000000000</max_memory_usage>
+            <use_uncompressed_cache>0</use_uncompressed_cache>
+            <load_balancing>in_order</load_balancing>
+            <log_queries>1</log_queries>
         </default>
+        <readonly>
+            <readonly>1</readonly>
+        </readonly>
     </profiles>
 
     <users>
-        <!-- Prometheus user with password from environment -->
-        <prometheus>
-            <password from_env="PROMETHEUS_PASSWORD"></password>
-            <networks incl="networks" replace="replace">
+        <default>
+            <access_management>1</access_management>
+            <profile>default</profile>
+            <networks>
                 <ip>::/0</ip>
             </networks>
-            <profile>default</profile>
             <quota>default</quota>
-            <databases>
-                <monitoring>
-                    <access>1</access>
-                </monitoring>
-                <system>
-                    <access>1</access>
-                </system>
-            </databases>
-            <access_management>0</access_management>
-            <named_collection_control>0</named_collection_control>
-        </prometheus>
+            <access_management>1</access_management>
+            <named_collection_control>1</named_collection_control>
+            <show_named_collections>1</show_named_collections>
+            <show_named_collections_secrets>1</show_named_collections_secrets>
+        </default>
 
-        <grafana>
-            <password from_env="GRAFANA_PASSWORD"></password>
-            <networks incl="networks" replace="replace">
+        <admin>
+            <password_sha256_hex from_env="ADMIN_PASSWORD_SHA256_HEX"></password_sha256_hex>
+            <profile>default</profile>
+            <networks>
                 <ip>::/0</ip>
             </networks>
-            <profile>default</profile>
             <quota>default</quota>
-            <databases>
-                <monitoring>
-                    <access>1</access>
-                </monitoring>
-                <system>
-                    <access>1</access>
-                </system>
-            </databases>
-            <access_management>0</access_management>
-            <named_collection_control>0</named_collection_control>
-        </grafana>
+            <access_management>1</access_management>
+            <named_collection_control>1</named_collection_control>
+            <show_named_collections>1</show_named_collections>
+            <show_named_collections_secrets>1</show_named_collections_secrets>
+        </admin>
     </users>
-
     <quotas>
         <default>
             <interval>

@@ -8,8 +8,6 @@ echo "Wait 3 seconds for the db to boot up"
 sleep 3
 echo "Executing the queries....."
 
-# Enable Delay accounting
-echo 1 > /proc/sys/kernel/task_delayacct
 
 clickhouse-client \
     --host="$CLICKHOUSE_HOST" \

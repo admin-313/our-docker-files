@@ -102,6 +102,22 @@ services:
     networks:
       node-exporter-network:
         ipv4_address: "172.90.91.254"
+  
+  blackbox_exporter:
+    image: "prom/blackbox-exporter:latest"
+    container_name: "blackbox_exporter"
+    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
+    restart: "unless-stopped"
+    expose:
+      - "9115"
+    volumes:
+      - "./blackbox.yml:/etc/blackbox_exporter/config.yml:ro"
+    command:
+      - '--config.file=/etc/blackbox_exporter/config.yml'
+    networks:
+      nginx_pingers:
+        ipv4_address: "172.89.1.250"
+
 
 volumes:
   grafana-storage: {}

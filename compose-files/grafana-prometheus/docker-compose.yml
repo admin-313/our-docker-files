@@ -39,20 +39,6 @@ services:
       grafana-main:
         ipv4_address: "172.88.1.252"
 
-  ping_exporter:
-    image: "czerwonk/ping_exporter:latest"
-    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
-    container_name: "ping_exporter"
-    hostname: "ping_exporter"
-    restart: "unless-stopped"
-    expose:
-      - "9427"
-    volumes:
-      - "./ping_exporter.yml:/config/config.yml:ro"
-    networks:
-      nginx_pingers:
-        ipv4_address: "172.89.1.251"
-
   prometheus:
     image: "prom/prometheus:latest"
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]

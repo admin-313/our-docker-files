@@ -26,14 +26,14 @@ services:
       - "0.0.0.0:30721:9000"
     volumes:
       - "clickhouse_data:/var/lib/clickhouse:rw"
-      - "clickhouse_logs:/var/log/clickhouse_server:rw"
+      - "clickhouse_logs:/var/log/clickhouse-server:rw"
       - "./clickhouse_config/init_db.sh:/docker-entrypoint-initdb.d/init_db.sh:rw"
       - "./clickhouse_config/config.d/config.xml:/etc/clickhouse-server/config.d/config.xml"
       - "./clickhouse_config/users.d/:/etc/clickhouse-server/users.d"
     environment:
-      ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
-      PROMETHEUS_PASSWORD: "${PROMETHEUS_PASSWORD}"
-      GRAFANA_PASSWORD: "${GRAFANA_PASSWORD}"
+      ADMIN_PASSWORD_PLAIN_TEXT: "${ADMIN_PASSWORD_PLAIN_TEXT}"
+      PROMETHEUS_PASSWORD_SHA256_HASH: "${PROMETHEUS_PASSWORD_SHA256_HASH}"
+      GRAFANA_PASSWORD_SHA256_HASH: "${GRAFANA_PASSWORD_SHA256_HASH}"
 
     networks:
       grafana-main:

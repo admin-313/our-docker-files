@@ -17,7 +17,7 @@
             <access_management>1</access_management>
             <profile>default</profile>
             <networks>
-                <ip>::/0</ip>
+                <ip>127.0.0.1</ip>
             </networks>
             <quota>default</quota>
             <access_management>1</access_management>
@@ -27,10 +27,10 @@
         </default>
 
         <admin>
-            <password_sha256_hex from_env="ADMIN_PASSWORD"></password_sha256_hex>
+            <password from_env="ADMIN_PASSWORD_PLAIN_TEXT"></password>
             <profile>default</profile>
             <networks>
-                <ip>::/0</ip>
+                <ip>127.0.0.1</ip>
             </networks>
             <quota>default</quota>
             <access_management>1</access_management>

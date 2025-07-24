@@ -3,8 +3,7 @@ set -e
 
 CLICKHOUSE_HOST="localhost"
 CLICKHOUSE_PORT="9000"
-ADMIN_USER="admin"
-ADMIN_PASSWORD="${ADMIN_PASSWORD}"
+ADMIN_PASSWORD_PLAIN_TEXT="${ADMIN_PASSWORD_PLAIN_TEXT}"
 
 echo "Wait 3 seconds for the db to boot up"
 sleep 3
@@ -13,8 +12,8 @@ echo "Executing the queries....."
 clickhouse-client \
     --host="$CLICKHOUSE_HOST" \
     --port="$CLICKHOUSE_PORT" \
-    --user="$ADMIN_USER" \
-    --password="$ADMIN_PASSWORD" \
+    --user="admin" \
+    --password="$ADMIN_PASSWORD_PLAIN_TEXT" \
     --multiquery << EOF
 
 
@@ -27,11 +26,11 @@ USE metrics;
 CREATE TABLE IF NOT EXISTS prometheus_metrics ENGINE=TimeSeries;
 
 CREATE USER IF NOT EXISTS grafana_readonly
-IDENTIFIED WITH sha256_password BY '${GRAFANA_PASSWORD}'
+IDENTIFIED WITH sha256_hash BY '${GRAFANA_PASSWORD_SHA256_HASH}'
 HOST IP '172.88.1.252/24';
 
 CREATE USER IF NOT EXISTS prometheus_remote_write
-IDENTIFIED WITH sha256_password BY '${PROMETHEUS_PASSWORD}'
+IDENTIFIED WITH sha256_hash BY '${PROMETHEUS_PASSWORD_SHA256_HASH}'
 HOST IP '172.88.1.252/24';
 
 

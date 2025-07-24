@@ -31,7 +31,7 @@ services:
       - "./clickhouse_config/config.d/config.xml:/etc/clickhouse-server/config.d/config.xml"
       - "./clickhouse_config/users.d/:/etc/clickhouse-server/users.d"
     environment:
-      ADMIN_PASSWORD_PLAIN_TEXT: "${ADMIN_PASSWORD_PLAIN_TEXT}"
+      ADMIN_PASSWORD_SHA256_HASH: "${ADMIN_PASSWORD_SHA256_HASH}"
       PROMETHEUS_PASSWORD_SHA256_HASH: "${PROMETHEUS_PASSWORD_SHA256_HASH}"
       GRAFANA_PASSWORD_SHA256_HASH: "${GRAFANA_PASSWORD_SHA256_HASH}"
 

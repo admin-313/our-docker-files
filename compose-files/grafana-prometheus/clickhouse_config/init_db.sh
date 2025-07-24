@@ -3,24 +3,29 @@ set -e
 
 CLICKHOUSE_HOST="localhost"
 CLICKHOUSE_PORT="9000"
-ADMIN_PASSWORD_PLAIN_TEXT="${ADMIN_PASSWORD_PLAIN_TEXT}"
 
 echo "Wait 3 seconds for the db to boot up"
 sleep 3
 echo "Executing the queries....."
 
+# Enable Delay accounting
+echo 1 > /proc/sys/kernel/task_delayacct
+
 clickhouse-client \
     --host="$CLICKHOUSE_HOST" \
     --port="$CLICKHOUSE_PORT" \
-    --user="admin" \
-    --password="$ADMIN_PASSWORD_PLAIN_TEXT" \
+    --user="default" \
     --multiquery << EOF
+
+CREATE USER IF NOT EXISTS clickhouse_admin
+IDENTIFIED WITH sha256_hash BY '${ADMIN_PASSWORD_SHA256_HASH}'
+HOST IP '127.0.0.1';
 
 
 CREATE DATABASE IF NOT EXISTS metrics;
+GRANT ALL ON *.* TO clickhouse_admin WITH GRANT OPTION;
 
 SET allow_experimental_time_series_table = 1;
-
 USE metrics;
 
 CREATE TABLE IF NOT EXISTS prometheus_metrics ENGINE=TimeSeries;
@@ -46,3 +51,8 @@ GRANT grafana_ro TO grafana_readonly;
 ALTER USER prometheus_remote_write DEFAULT ROLE prometheus_rw;
 ALTER USER grafana_readonly DEFAULT ROLE grafana_ro;
 EOF
+
+echo
+echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+echo "!!!Consider modifying the users and removing the default user. See the users.xml file!!!"
+echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"

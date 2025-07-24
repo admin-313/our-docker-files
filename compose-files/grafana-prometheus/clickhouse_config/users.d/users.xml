@@ -27,7 +27,7 @@
         </default>
 
         <admin>
-            <password_sha256_hex from_env="ADMIN_PASSWORD_SHA256_HEX"></password_sha256_hex>
+            <password_sha256_hex from_env="ADMIN_PASSWORD"></password_sha256_hex>
             <profile>default</profile>
             <networks>
                 <ip>::/0</ip>

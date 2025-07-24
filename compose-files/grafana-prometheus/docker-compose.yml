@@ -31,9 +31,9 @@ services:
       - "./clickhouse_config/config.d/config.xml:/etc/clickhouse-server/config.d/config.xml"
       - "./clickhouse_config/users.d/:/etc/clickhouse-server/users.d"
     environment:
-      ADMIN_PASSWORD_SHA256_HEX: "${ADMIN_PASSWORD_SHA256_HEX}"
-      PROMETHEUS_PASSWORD_SHA256_HEX: "${PROMETHEUS_PASSWORD_SHA256_HEX}"
-      GRAFANA_PASSWORD_SHA256_HEX: "${GRAFANA_PASSWORD_SHA256_HEX}"
+      ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
+      PROMETHEUS_PASSWORD: "${PROMETHEUS_PASSWORD}"
+      GRAFANA_PASSWORD: "${GRAFANA_PASSWORD}"
 
     networks:
       grafana-main:

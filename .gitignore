@@ -5,3 +5,4 @@ venv
 compose-files/grafana-prometheus/ping_exporter.yml
 compose-files/grafana-prometheus/prometheus.yml
 compose-files/grafana-prometheus/alertmanager.yml
+restart.sh

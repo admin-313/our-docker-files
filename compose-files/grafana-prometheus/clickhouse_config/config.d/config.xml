@@ -18,4 +18,17 @@
             <path>/var/lib/clickhouse/access/</path>
         </local_directory>
     </user_directories>
+
+    <prometheus>
+        <port>9363</port>
+        <handlers>
+            <my_rule_1>
+                <url>/write/prometheus</url>
+                <handler>
+                    <type>remote_write</type>
+                    <table>metrics.prometheus_metrics</table>
+                </handler>
+            </my_rule_1>
+        </handlers>
+</prometheus>
 </clickhouse>

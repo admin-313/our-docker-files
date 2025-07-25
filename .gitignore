@@ -5,4 +5,5 @@ venv
 compose-files/grafana-prometheus/ping_exporter.yml
 compose-files/grafana-prometheus/prometheus_config/prometheus.yml
 compose-files/grafana-prometheus/alertmanager.yml
+compose-files/grafana-prometheus/sd_configs/blackbox_targets.json
 restart.sh

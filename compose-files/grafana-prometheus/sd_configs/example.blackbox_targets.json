@@ -1,0 +1,20 @@
+[
+  {
+    "targets": [
+      "http://1.1.1.1/health"
+    ],
+    "labels": {
+      "job": "blackbox",
+      "agent_name": "prod-l1-baza"
+    }
+  },
+  {
+    "targets": [
+      "http://8.8.8.8/health"
+    ],
+    "labels": {
+      "job": "blackbox",
+      "agent_name": "prod-l2-baza"
+    }
+  }
+]

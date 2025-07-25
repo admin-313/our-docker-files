@@ -3,20 +3,29 @@ global:
   scrape_interval: "20s"
 
 scrape_configs:
-  - job_name: "ping_exporter"
-    scrape_interval: "5s"
-    honor_labels: true
-    scheme: "http"
+  - job_name: "blackbox"
+    scrape_interval: 60s
+    metrics_path: "/probe"
+    params:
+      module: [http_2xx]
+    file_sd_configs:
+      - files:
+        - "/etc/prometheus/sd_configs/blackbox_targets.json"
+    relabel_configs:
+      - source_labels: [agent_name]
+        target_label: agent_name
+      # Use the target URL as the __param_target
+      - source_labels: [__address__]
+        target_label: __param_target
+      # Replace the instance with the target URL
+      - source_labels: [__param_target]
+        target_label: instance
+      # Point to the blackbox exporter
+      - target_label: __address__
+        replacement: 172.89.1.250:9115
+
+  - job_name: "node-exporter"
+    scrape_interval: 5s
     static_configs:
       - targets:
-          - "ping_exporter:9427"
-
-    metric_relabel_configs:
-      - source_labels: ["target"]
-        regex: "172.89.1.253"
-        target_label: "name"
-        replacement: "prometheus"
-      - source_labels: ["target"]
-        regex: "172.89.1.253"
-        target_label: "group"
-        replacement: "internal"
+        - '172.18.19.105:9100'

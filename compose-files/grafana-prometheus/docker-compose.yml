@@ -52,13 +52,16 @@ services:
       - "--web.enable-lifecycle"
       - "--enable-feature=remote-write-receiver"
     volumes:
-      - "./prometheus.yml:/etc/prometheus/prometheus.yml:ro"
-      - "./alert_rules.yml:/etc/prometheus/alert_rules.yml:ro"
+      - "./prometheus_config/prometheus.yml:/etc/prometheus/prometheus.yml.template:rw"
+      - "./prometheus_config/init.sh:/etc/prometheus/init.sh:rw"
+    environment:
+      PROMETHEUS_CLICKHOUSE_USERNAME: "${PROMETHEUS_CLICKHOUSE_USERNAME}"
+      PROMETHEUS_CLICKHOUSE_PASSWORD: "${PROMETHEUS_CLICKHOUSE_PASSWORD}"
     networks:
-      nginx_pingers:
-        ipv4_address: "172.89.1.253"
       grafana-main:
         ipv4_address: "172.88.1.253"
+      nginx_pingers:
+        ipv4_address: "172.89.1.253"
       node-exporter-network:
         ipv4_address: "172.90.91.253"
 

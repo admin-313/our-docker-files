@@ -3,6 +3,6 @@ venv
 .github/workflows/secrets.env
 .botapitoken
 compose-files/grafana-prometheus/ping_exporter.yml
-compose-files/grafana-prometheus/prometheus.yml
+compose-files/grafana-prometheus/prometheus_config/prometheus.yml
 compose-files/grafana-prometheus/alertmanager.yml
 restart.sh

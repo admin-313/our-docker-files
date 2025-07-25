@@ -40,8 +40,8 @@ HOST IP '172.88.1.252/24';
 CREATE ROLE IF NOT EXISTS prometheus_rw;
 CREATE ROLE IF NOT EXISTS grafana_ro;
 
-GRANT SELECT, INSERT ON metrics.prometheus_metrics TO prometheus_rw;
-GRANT SELECT ON metrics.prometheus_metrics TO grafana_ro;
+GRANT SELECT, INSERT ON metrics TO prometheus_rw;
+GRANT SELECT ON metrics TO grafana_ro;
 
 GRANT prometheus_rw TO prometheus_remote_write;
 GRANT grafana_ro TO grafana_readonly;

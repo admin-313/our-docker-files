@@ -1,7 +1,9 @@
 #!/bin/sh
 
 # Substitute environment variables in the template
-envsubst < /etc/prometheus/prometheus.yml.template > /etc/prometheus/prometheus.yml
+sed -e "s/\${PROMETHEUS_CLICKHOUSE_USERNAME}/${PROMETHEUS_CLICKHOUSE_USERNAME}/g" \
+    -e "s/\${PROMETHEUS_CLICKHOUSE_PASSWORD}/${PROMETHEUS_CLICKHOUSE_PASSWORD}/g" \
+    /etc/prometheus/prometheus.yml.template > /etc/prometheus/prometheus.yml
 
 # Verify the substitution worked
 echo "Generated prometheus.yml"

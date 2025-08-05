@@ -49,6 +49,7 @@ services:
       - "9090"
     entrypoint: ["/etc/prometheus/entrypoint.sh"]
     volumes:
+      - "./sd_configs:/etc/prometheus/sd_configs:rw"
       - "./prometheus_config/prometheus.yml:/etc/prometheus/prometheus.yml.template:rw"
       - "./prometheus_config/entrypoint.sh:/etc/prometheus/entrypoint.sh:rw"
     environment:

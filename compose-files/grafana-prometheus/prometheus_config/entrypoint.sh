@@ -11,5 +11,4 @@ echo "Booting up prometheus....\n\n\n"
 exec /bin/prometheus \
   --config.file=/etc/prometheus/prometheus.yml \
   --web.enable-lifecycle \
-  --enable-feature=remote-write-receiver \
   "$@"

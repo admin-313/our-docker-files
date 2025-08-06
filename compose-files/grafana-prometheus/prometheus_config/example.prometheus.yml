@@ -31,7 +31,7 @@ scrape_configs:
           - "172.18.19.105:9100"
 
 remote_write:
-  - url: "http://clickhouse-grafana:9363/write"
+  - url: "http://clickhouse-grafana:9363/prometheus/remote/write"
     # Basic authentication for ClickHouse
     basic_auth:
       username: "${PROMETHEUS_CLICKHOUSE_USERNAME}"
@@ -58,3 +58,13 @@ remote_write:
       send: true
       send_interval: 30s
       max_samples_per_send: 2000
+
+remote_read:
+  - url: "http://clickhouse-grafana:9363/prometheus/remote/read"
+    # Custom headers for ClickHouse
+    headers:
+      X-ClickHouse-User: ${PROMETHEUS_CLICKHOUSE_USERNAME}
+      X-ClickHouse-Key: ${PROMETHEUS_CLICKHOUSE_PASSWORD}
+    read_recent: true
+    name: "clickhouse-remote-read"
+    remote_timeout: 10s

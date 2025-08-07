@@ -1,10 +1,11 @@
+---
 # Consider using ssl in prod
 modules:
   http_2xx:
-    prober: http
-    timeout: 5s
+    prober: "http"
+    timeout: "5s"
     http:
-      method: GET
+      method: "GET"
       valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
       valid_status_codes: []  # Defaults to 2xx
       follow_redirects: true
@@ -14,5 +15,4 @@ modules:
       fail_if_not_ssl: false
       tls_config:
         insecure_skip_verify: true
-
-
+...

@@ -32,9 +32,12 @@ services:
       - "./clickhouse_config/config.d/config.xml:/etc/clickhouse-server/config.d/config.xml"
       - "./clickhouse_config/users.d/:/etc/clickhouse-server/users.d"
     environment:
-      CLICKHOUSE_ADMIN_PASSWORD_SHA256_HASH: "${CLICKHOUSE_ADMIN_PASSWORD_SHA256_HASH}"
-      CLICKHOUSE_PROMETHEUS_PASSWORD_SHA256_HASH: "${CLICKHOUSE_PROMETHEUS_PASSWORD_SHA256_HASH}"
-      CLICKHOUSE_GRAFANA_PASSWORD_SHA256_HASH: "${CLICKHOUSE_GRAFANA_PASSWORD_SHA256_HASH}"
+      CLICKHOUSE_ADMIN_PASSWORD_SHA256_HASH: >-
+        "${CLICKHOUSE_ADMIN_PASSWORD_SHA256_HASH}"
+      CLICKHOUSE_PROMETHEUS_PASSWORD_SHA256_HASH: >-
+        "${CLICKHOUSE_PROMETHEUS_PASSWORD_SHA256_HASH}"
+      CLICKHOUSE_GRAFANA_PASSWORD_SHA256_HASH: >-
+        "${CLICKHOUSE_GRAFANA_PASSWORD_SHA256_HASH}"
 
     networks:
       grafana-main:
@@ -104,7 +107,7 @@ services:
     networks:
       node-exporter-network:
         ipv4_address: "172.90.91.254"
-  
+
   blackbox_exporter:
     image: "prom/blackbox-exporter:latest"
     container_name: "blackbox_exporter"

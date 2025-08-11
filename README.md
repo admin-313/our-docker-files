@@ -17,7 +17,7 @@ sudo docker compose up -d
 
 ### Launch Grafana with Prometheus, Clickhouse, Blackbox exporter and node exporter with docker compose
 ```
-curl https://raw.githubusercontent.com/admin-313/our-docker-files/main/compose-files/grafana-prometheus/install.sh | sh
+curl https://raw.githubusercontent.com/admin-313/our-docker-files/main/compose-files/grafana-prometheus/install.sh | bash
 ```
 - Remove the default user from ClickHouse db (See clickhouse_config/users.d/users.xml)
 - Pay attention to:

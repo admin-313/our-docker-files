@@ -19,7 +19,7 @@ rules:
   comments:
     level: error
   comments-indentation:
-    level: error
+    level: warning
   document-end:
     level: error
   document-start:

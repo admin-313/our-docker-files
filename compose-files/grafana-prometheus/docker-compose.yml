@@ -17,20 +17,31 @@ services:
     networks:
       grafana-main:
         ipv4_address: "172.88.1.254"
-
-  ping_exporter:
-    image: "czerwonk/ping_exporter:latest"
-    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
-    container_name: "ping_exporter"
-    hostname: "ping_exporter"
-    restart: "unless-stopped"
+  clickhouse:
+    image: "clickhouse/clickhouse-server:25.6-alpine"
+    container_name: "clickhouse-grafana"
+    ports:
+      - "0.0.0.0:8123:8123"
+      - "0.0.0.0:30721:9000"
     expose:
-      - "9427"
+      - "9363"
     volumes:
-      - "./ping_exporter.yml:/config/config.yml:ro"
+      - "clickhouse_data:/var/lib/clickhouse:rw"
+      - "clickhouse_logs:/var/log/clickhouse-server:rw"
+      - "./clickhouse_config/init_db.sh:/docker-entrypoint-initdb.d/init_db.sh:rw"
+      - "./clickhouse_config/config.d/config.xml:/etc/clickhouse-server/config.d/config.xml"
+      - "./clickhouse_config/users.d/:/etc/clickhouse-server/users.d"
+    environment:
+      CLICKHOUSE_ADMIN_PASSWORD_SHA256_HASH: >-
+        "${CLICKHOUSE_ADMIN_PASSWORD_SHA256_HASH}"
+      CLICKHOUSE_PROMETHEUS_PASSWORD_SHA256_HASH: >-
+        "${CLICKHOUSE_PROMETHEUS_PASSWORD_SHA256_HASH}"
+      CLICKHOUSE_GRAFANA_PASSWORD_SHA256_HASH: >-
+        "${CLICKHOUSE_GRAFANA_PASSWORD_SHA256_HASH}"
+
     networks:
-      nginx_pingers:
-        ipv4_address: "172.89.1.251"
+      grafana-main:
+        ipv4_address: "172.88.1.252"
 
   prometheus:
     image: "prom/prometheus:latest"
@@ -39,17 +50,19 @@ services:
     restart: "unless-stopped"
     expose:
       - "9090"
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-      - "--web.enable-lifecycle"
+    entrypoint: ["/etc/prometheus/entrypoint.sh"]
     volumes:
-      - "./prometheus.yml:/etc/prometheus/prometheus.yml:ro"
-      - "./alert_rules.yml:/etc/prometheus/alert_rules.yml:ro"
+      - "./sd_configs:/etc/prometheus/sd_configs:rw"
+      - "./prometheus_config/prometheus.yml:/etc/prometheus/prometheus.yml.template:rw"
+      - "./prometheus_config/entrypoint.sh:/etc/prometheus/entrypoint.sh:rw"
+    environment:
+      PROMETHEUS_CLICKHOUSE_USERNAME: "${PROMETHEUS_CLICKHOUSE_USERNAME}"
+      PROMETHEUS_CLICKHOUSE_PASSWORD: "${PROMETHEUS_CLICKHOUSE_PASSWORD}"
     networks:
-      nginx_pingers:
-        ipv4_address: "172.89.1.253"
       grafana-main:
         ipv4_address: "172.88.1.253"
+      nginx_pingers:
+        ipv4_address: "172.89.1.253"
       node-exporter-network:
         ipv4_address: "172.90.91.253"
 
@@ -62,16 +75,11 @@ services:
     command: "--scope mainwatchtower"
     labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
     environment:
-      WATCHTOWER_CLEANUP: "true"
-      WATCHTOWER_POLL_INTERVAL: "86400"
-      WATCHTOWER_NOTIFICATIONS_LEVEL: "info"
-      WATCHTOWER_NOTIFICATION_TEMPLATE: >-
-        '{{if .}}{"chat_id": "your_chat_id",
-        "message_thread_id": 13,
-        "parse_mode": "HTML",
-        "text": "{{range .}}{{.Message}}\n{{end}}"}{{end}}'
-      WATCHTOWER_NOTIFICATION_URL: >-
-        "generic://api.telegram.org/bot<your_bot_token>/sendMessage"
+      WATCHTOWER_CLEANUP: "${WATCHTOWER_CLEANUP}"
+      WATCHTOWER_POLL_INTERVAL: "${WATCHTOWER_POLL_INTERVAL}"
+      WATCHTOWER_NOTIFICATIONS_LEVEL: "${WATCHTOWER_NOTIFICATIONS_LEVEL}"
+      WATCHTOWER_NOTIFICATION_TEMPLATE: "${WATCHTOWER_NOTIFICATION_TEMPLATE}"
+      WATCHTOWER_NOTIFICATION_URL: "${WATCHTOWER_NOTIFICATION_URL}"
 
   node-exporter:
     image: "prom/node-exporter:master"
@@ -95,8 +103,52 @@ services:
       node-exporter-network:
         ipv4_address: "172.90.91.254"
 
+  blackbox_exporter:
+    image: "prom/blackbox-exporter:latest"
+    container_name: "blackbox_exporter"
+    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
+    restart: "unless-stopped"
+    expose:
+      - "9115"
+    volumes:
+      - "./blackbox.yml:/etc/blackbox_exporter/config.yml:ro"
+    command:
+      - '--config.file=/etc/blackbox_exporter/config.yml'
+    networks:
+      nginx_pingers:
+        ipv4_address: "172.89.1.250"
+
+  docker-volume-backup:
+    image: "offen/docker-volume-backup:v2"
+    labels: ["com.centurylinklabs.watchtower.scope=mainwatchtower"]
+    restart: "unless-stopped"
+    volumes:
+      - "grafana-storage:/backup/grafana-backup:ro"
+      - "/home/graf/local-volumes-backup/grafana:/archive"
+    environment:
+      BACKUP_CRON_EXPRESSION: "${BACKUP_CRON_EXPRESSION}"
+      BACKUP_SOURCES: "${BACKUP_SOURCES}"
+      BACKUP_FILENAME: "${BACKUP_FILENAME}"
+      BACKUP_COMPRESSION: "${BACKUP_COMPRESSION}"
+      GZIP_PARALLELISM: "${GZIP_PARALLELISM}"
+
+      AWS_S3_BUCKET_NAME: "${BACKUP_S3_BUCKET_NAME}"
+      AWS_S3_PATH: "${BACKUP_S3_PATH}"
+      AWS_ACCESS_KEY_ID: "${BACKUP_S3_ACCESS_KEY}"
+      AWS_SECRET_ACCESS_KEY: "${BACKUP_S3_SECRET_KEY}"
+      AWS_ENDPOINT: "${BACKUP_S3_ENDPOINT}"
+      AWS_ENDPOINT_PROTO: "${BACKUP_S3_PROTO}"
+      AWS_STORAGE_CLASS: "${BACKUP_S3_STORAGE_CLASS}"
+      BACKUP_ARCHIVE: "/archive"
+
+    depends_on:
+      grafana:
+        condition: "service_started"
+
 volumes:
   grafana-storage: {}
+  clickhouse_data: {}
+  clickhouse_logs: {}
 
 secrets:
   grafana_secrets:

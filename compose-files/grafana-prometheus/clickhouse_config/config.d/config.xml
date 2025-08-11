@@ -1,0 +1,41 @@
+<clickhouse replace="true">
+    <logger>
+        <level>information</level>
+        <log>/var/log/clickhouse-server/clickhouse-server.log</log>
+        <errorlog>/var/log/clickhouse-server/clickhouse-server.err.log</errorlog>
+        <size>1000M</size>
+        <count>3</count>
+    </logger>
+    <display_name>clickhouse_grafana</display_name>
+    <listen_host>0.0.0.0</listen_host>
+    <http_port>8123</http_port>
+    <tcp_port>9000</tcp_port>
+    <user_directories>
+        <users_xml>
+            <path>users.xml</path>
+        </users_xml>
+        <local_directory>
+            <path>/var/lib/clickhouse/access/</path>
+        </local_directory>
+    </user_directories>
+
+    <prometheus>
+        <port>9363</port>
+        <handlers>
+            <remote_write_rule>
+                <url>/prometheus/remote/write</url>
+                <handler>
+                    <type>remote_write</type>
+                    <table>metrics.prometheus_metrics</table>
+                </handler>
+            </remote_write_rule>
+            <remote_read_rule>
+                <url>/prometheus/remote/read</url>
+                <handler>
+                    <type>remote_read</type>
+                    <table>metrics.prometheus_metrics</table>
+                </handler>
+            </remote_read_rule>
+        </handlers>
+</prometheus>
+</clickhouse>

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euo pipefail
+set -e
 echo "This script will install docker compose deployment of Grafana stack"
 
 # Repo base (raw) URL

@@ -11,7 +11,6 @@ need curl
 
 # List of files to fetch (paths are relative to the repo root above)
 FILES=(
-  ".env"
   "example.env"
   "docker-compose.yml"
   "grafana.ini"

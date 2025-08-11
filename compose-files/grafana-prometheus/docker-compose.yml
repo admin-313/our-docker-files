@@ -20,10 +20,8 @@ services:
   clickhouse:
     image: "clickhouse/clickhouse-server:25.6-alpine"
     container_name: "clickhouse-grafana"
-    ports:
-      - "0.0.0.0:8123:8123"
-      - "0.0.0.0:30721:9000"
     expose:
+    # remote read/write for Prometheus
       - "9363"
     volumes:
       - "clickhouse_data:/var/lib/clickhouse:rw"

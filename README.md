@@ -15,11 +15,16 @@ curl -o docker-compose.yml https://raw.githubusercontent.com/admin-313/our-docke
 sudo docker compose up -d
 ```
 
-### Launch Grafana with Prometheus, ping exporter and node exporter with docker compose
-Don't forget to put config files
+### Launch Grafana with Prometheus, Clickhouse, Blackbox exporter and node exporter with docker compose
 ```
-curl -o docker-compose.yml https://raw.githubusercontent.com/admin-313/our-docker-files/main/compose-files/grafana-prometheus/docker-compose.yml
+curl https://raw.githubusercontent.com/admin-313/our-docker-files/main/compose-files/grafana-prometheus/install.sh | sh
 ```
+- Remove the default user from ClickHouse db (See clickhouse_config/users.d/users.xml)
+- Pay attention to:
+  - sd_configs/blackbox_targets.json
+  - prometheus_config/prometheus.yml
+  - .env
+- Modify \^these\^ files with your own data
 ```
 sudo docker compose up -d
 ```

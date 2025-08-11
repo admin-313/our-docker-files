@@ -37,6 +37,10 @@ for relpath in "${FILES[@]}"; do
   esac
 done
 
+mv example.env .env
+mv sd_configs/example.blackbox_targets.json sd_configs/blackbox_targets.json
+mv prometheus_config/example.prometheus.yml prometheus_config/prometheus.yml
+
 echo "All files downloaded."
 
 echo "Now populate the following files with your configs:"

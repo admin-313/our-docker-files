@@ -4,28 +4,25 @@ global:
 
 scrape_configs:
   - job_name: "blackbox"
-    scrape_interval: 60s
+    scrape_interval: "60s"
     metrics_path: "/probe"
     params:
-      module: [http_2xx]
+      module: ["http_2xx"]
     file_sd_configs:
       - files:
           - "/etc/prometheus/sd_configs/blackbox_targets.json"
     relabel_configs:
-      - source_labels: [agent_name]
-        target_label: agent_name
-      # Use the target URL as the __param_target
-      - source_labels: [__address__]
-        target_label: __param_target
-      # Replace the instance with the target URL
-      - source_labels: [__param_target]
-        target_label: instance
-      # Point to the blackbox exporter
-      - target_label: __address__
-        replacement: 172.89.1.250:9115
+      - source_labels: ["agent_name"]
+        target_label: "agent_name"
+      - source_labels: ["__address__"]
+        target_label: "__param_target"
+      - source_labels: ["__param_target"]
+        target_label: "instance"
+      - target_label: "__address__"
+        replacement: "172.89.1.250:9115"
 
   - job_name: "node-exporter"
-    scrape_interval: 5s
+    scrape_interval: "5s"
     static_configs:
       - targets:
           - "172.18.19.105:9100"
@@ -34,30 +31,31 @@ remote_write:
   - url: "http://clickhouse-grafana:9363/prometheus/remote/write"
     # Custom headers for ClickHouse
     headers:
-      X-ClickHouse-User: ${PROMETHEUS_CLICKHOUSE_USERNAME}
-      X-ClickHouse-Key: ${PROMETHEUS_CLICKHOUSE_PASSWORD}
+      X-ClickHouse-User: "${PROMETHEUS_CLICKHOUSE_USERNAME}"
+      X-ClickHouse-Key: "${PROMETHEUS_CLICKHOUSE_PASSWORD}"
 
     queue_config:
       capacity: 10000
       max_shards: 200
       min_shards: 1
       max_samples_per_send: 5000
-      batch_send_deadline: 5s
-      min_backoff: 30ms
-      max_backoff: 5s
+      batch_send_deadline: "5s"
+      min_backoff: "30ms"
+      max_backoff: "5s"
       retry_on_http_429: true
 
     metadata_config:
       send: true
-      send_interval: 30s
+      send_interval: "30s"
       max_samples_per_send: 2000
 
 remote_read:
   - url: "http://clickhouse-grafana:9363/prometheus/remote/read"
     # Custom headers for ClickHouse
     headers:
-      X-ClickHouse-User: ${PROMETHEUS_CLICKHOUSE_USERNAME}
-      X-ClickHouse-Key: ${PROMETHEUS_CLICKHOUSE_PASSWORD}
+      X-ClickHouse-User: "${PROMETHEUS_CLICKHOUSE_USERNAME}"
+      X-ClickHouse-Key: "${PROMETHEUS_CLICKHOUSE_PASSWORD}"
     read_recent: true
     name: "clickhouse-remote-read"
-    remote_timeout: 10s
+    remote_timeout: "10s"
+...
